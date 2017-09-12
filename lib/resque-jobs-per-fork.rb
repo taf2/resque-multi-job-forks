@@ -44,12 +44,10 @@ module Resque
 
       # continue to process more jobs
       while @jobs_performed < @jobs_per_fork do
-        printf "jobs_performed: #{@jobs_performed} -> #{@jobs_per_fork}"
         break if shutdown?
         if another_job = reserve
           perform_without_jobs_per_fork(another_job)
         else
-          puts "skip"
           @jobs_performed += 1
           break # to prevent looping/hammering Redis with LPOPs
         end
